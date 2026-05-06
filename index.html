@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pulse Programming Language</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #f7f7f2;
+      --ink: #101010;
+      --red: #e51b23;
+      --green: #16ff5f;
+      --cyan: #00d9ff;
+      --purple: #d85cff;
+      --muted: #666;
+      --line: #d9d9d0;
+      --monitor: #050505;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--red);
+      color: white;
+      border-bottom: 3px solid var(--ink);
+    }
+
+    .nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      font-size: clamp(1.7rem, 3vw, 2.6rem);
+      font-weight: 900;
+      letter-spacing: -2px;
+      background: white;
+      color: var(--red);
+      padding: 2px 12px;
+      line-height: 1;
+      text-transform: lowercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    .hero {
+      min-height: 82vh;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 70px 22px;
+      gap: 42px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      background: var(--ink);
+      color: white;
+      padding: 7px 11px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(4rem, 10vw, 9rem);
+      line-height: 0.85;
+      letter-spacing: -7px;
+      text-transform: lowercase;
+      margin-bottom: 22px;
+    }
+
+    .hero-copy {
+      max-width: 660px;
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      font-weight: 700;
+      margin-bottom: 28px;
+    }
+
+    .hero-copy span {
+      color: var(--red);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 13px 18px;
+      border: 2px solid var(--ink);
+      text-decoration: none;
+      color: var(--ink);
+      font-weight: 900;
+      text-transform: uppercase;
+      box-shadow: 5px 5px 0 var(--ink);
+      transition: 0.15s ease;
+      background: white;
+    }
+
+    .btn:hover {
+      transform: translate(3px, 3px);
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+
+    .btn.primary {
+      background: var(--red);
+      color: white;
+    }
+
+    .monitor-card {
+      background: var(--monitor);
+      color: white;
+      border: 4px solid var(--ink);
+      box-shadow: 12px 12px 0 var(--red);
+      padding: 18px;
+      min-height: 390px;
+    }
+
+    .monitor-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #333;
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+      font-family: monospace;
+      color: var(--green);
+    }
+
+    .bpm {
+      font-size: 4.2rem;
+      line-height: 1;
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .wave-row {
+      margin: 20px 0;
+    }
+
+    .wave-label {
+      font-family: monospace;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    svg {
+      width: 100%;
+      height: 58px;
+      overflow: visible;
+    }
+
+    .pulse-line {
+      fill: none;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 700;
+      stroke-dashoffset: 700;
+      animation: draw 3s infinite linear;
+    }
+
+    .green { stroke: var(--green); }
+    .cyan { stroke: var(--cyan); }
+    .purple { stroke: var(--purple); }
+    .red { stroke: var(--red); }
+
+    @keyframes draw {
+      to { stroke-dashoffset: 0; }
+    }
+
+    section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 70px 22px;
+      border-top: 2px solid var(--line);
+    }
+
+    .section-title {
+      font-size: clamp(2.4rem, 6vw, 5.5rem);
+      line-height: 0.9;
+      letter-spacing: -4px;
+      text-transform: lowercase;
+      margin-bottom: 26px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: white;
+      border: 2px solid var(--ink);
+      padding: 22px;
+      box-shadow: 7px 7px 0 var(--ink);
+    }
+
+    .card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .card p,
+    .card li {
+      color: #222;
+      font-weight: 600;
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--red);
+      color: white;
+      font-weight: 900;
+      padding: 3px 8px;
+      margin-bottom: 12px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    .code-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    pre {
+      background: #080808;
+      color: #e8e8e8;
+      border: 2px solid var(--ink);
+      padding: 22px;
+      overflow-x: auto;
+      min-height: 100%;
+      font-size: 0.95rem;
+      line-height: 1.55;
+      box-shadow: 7px 7px 0 var(--red);
+    }
+
+    code {
+      font-family: Consolas, Monaco, monospace;
+    }
+
+    .keyword {
+      color: var(--red);
+      font-weight: bold;
+    }
+
+    .keyword-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .keyword-list li {
+      background: white;
+      border: 2px solid var(--ink);
+      padding: 12px;
+      font-weight: 800;
+    }
+
+    .keyword-list span {
+      color: var(--red);
+    }
+
+    .cta {
+      background: var(--ink);
+      color: white;
+      text-align: center;
+      padding: 80px 22px;
+      margin-top: 40px;
+    }
+
+    .cta h2 {
+      font-size: clamp(2.8rem, 8vw, 7rem);
+      letter-spacing: -5px;
+      line-height: 0.9;
+      margin-bottom: 20px;
+      text-transform: lowercase;
+    }
+
+    .cta p {
+      font-size: 1.2rem;
+      max-width: 720px;
+      margin: 0 auto 26px;
+      font-weight: 700;
+    }
+
+    footer {
+      background: var(--red);
+      color: white;
+      text-align: center;
+      padding: 22px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 850px) {
+      .hero,
+      .code-layout,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      h1 {
+        letter-spacing: -4px;
+      }
+
+      .keyword-list {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <nav class="nav">
+      <div class="brand">pulse</div>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#syntax">Syntax</a>
+        <a href="#examples">Examples</a>
+        <a href="#download">Start</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <span class="eyebrow">educational programming language</span>
+        <h1>code with a heartbeat.</h1>
+        <p class="hero-copy">
+          Pulse helps beginner programmers <span>see code execute</span> by turning every statement into a live ECG-style signal.
+        </p>
+        <div class="button-row">
+          <a class="btn primary" href="#examples">View Example</a>
+          <a class="btn" href="#syntax">Learn Syntax</a>
+        </div>
+      </div>
+
+      <aside class="monitor-card" aria-label="ECG visualization preview">
+        <div class="monitor-top">
+          <div>
+            <strong>DIAGNOSTIC MODE</strong><br />
+            Pulse Runtime Monitor
+          </div>
+          <div class="bpm">80</div>
+        </div>
+
+        <div class="wave-row">
+          <div class="wave-label">admit variable</div>
+          <svg viewBox="0 0 500 70">
+            <path class="pulse-line green" d="M0 35 L50 35 L65 10 L80 60 L95 35 L160 35 L175 15 L190 55 L205 35 L285 35 L300 8 L315 62 L330 35 L500 35" />
+          </svg>
+        </div>
+
+        <div class="wave-row">
+          <div class="wave-label">diagnose branch</div>
+          <svg viewBox="0 0 500 70">
+            <path class="pulse-line cyan" d="M0 38 C35 5, 70 5, 105 38 S175 71, 210 38 S280 5, 315 38 S385 71, 420 38 S470 12, 500 35" />
+          </svg>
+        </div>
+
+        <div class="wave-row">
+          <div class="wave-label">code error</div>
+          <svg viewBox="0 0 500 70">
+            <path class="pulse-line red" d="M0 35 L70 35 L85 8 L100 62 L115 8 L130 62 L145 35 L230 35 L245 8 L260 62 L275 8 L290 62 L305 35 L500 35" />
+          </svg>
+        </div>
+      </aside>
+    </section>
+
+    <section id="about">
+      <h2 class="section-title">why pulse?</h2>
+      <div class="grid-3">
+        <article class="card">
+          <span class="tag">01</span>
+          <h3>Visual Execution</h3>
+          <p>Every command creates a pulse, helping students understand what happens while the program runs.</p>
+        </article>
+        <article class="card">
+          <span class="tag">02</span>
+          <h3>Medical Metaphor</h3>
+          <p>Keywords use medical language, making programming concepts easier to remember through familiar metaphors.</p>
+        </article>
+        <article class="card">
+          <span class="tag">03</span>
+          <h3>Debug by Rhythm</h3>
+          <p>When code crashes, the monitor flatlines so students can identify the last executed statement.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="syntax">
+      <h2 class="section-title">syntax</h2>
+      <ul class="keyword-list">
+        <li><span>admit</span> = declare variable</li>
+        <li><span>update</span> = assign value</li>
+        <li><span>protocol</span> = function</li>
+        <li><span>page</span> = call function</li>
+        <li><span>diagnose</span> = if statement</li>
+        <li><span>otherwise</span> = else</li>
+        <li><span>cycle</span> = for loop</li>
+        <li><span>monitor</span> = while loop</li>
+        <li><span>record</span> = output</li>
+        <li><span>flatline</span> = end program</li>
+      </ul>
+    </section>
+
+    <section id="examples">
+      <h2 class="section-title">sample pulse</h2>
+      <div class="code-layout">
+        <pre><code><span class="keyword">protocol</span> fact n
+    <span class="keyword">diagnose</span> n &lt;= 1
+        <span class="keyword">discharge</span> 1
+    <span class="keyword">discharge</span> n * page fact(n - 1)
+
+<span class="keyword">admit</span> result vital = page fact(5)
+<span class="keyword">record</span> result
+<span class="keyword">flatline</span></code></pre>
+
+        <article class="card">
+          <span class="tag">what happens?</span>
+          <h3>Factorial Visualization</h3>
+          <p>The function call creates a protocol pulse. Each recursive call adds another pulse sequence. Once the result returns, Pulse records the output and ends with a flatline.</p>
+          <br />
+          <p><strong>Goal:</strong> make code execution easier to understand for beginners.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="download" class="cta">
+      <h2>bring code back to life.</h2>
+      <p>Pulse is a concept language built for education, debugging, and visual learning.</p>
+      <a class="btn primary" href="#syntax">Start Learning</a>
+    </section>
+  </main>
+
+  <footer>
+    Pulse Language Project · Fernando Soto & Felipe Munoz
+  </footer>
+</body>
+</html>
