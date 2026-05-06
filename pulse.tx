@@ -1,0 +1,169 @@
+// Indentation is made into >>> (INDENT) and <<< (DEDENT).
+
+Program:
+    statements*=Statement
+    'flatline'
+;
+
+Statement:
+    Admit | Update | Protocol | TryBlock | Monitor | Cycle |
+    Diagnose | Discharge | Record | PageStmt
+;
+
+Admit:
+    'admit' name=ID (type=TypeName)? '=' value=Expression
+;
+
+TypeName:
+    'vital' | 'note' | 'status' | 'chart'
+;
+
+Update:
+    'update' name=ID '=' value=Expression
+;
+
+Protocol:
+    'protocol' name=ID params*=ID
+    '>>>'
+        body*=Statement
+    '<<<'
+;
+
+PageStmt:
+    'page' name=ID '(' args*=Expression[','] ')'
+;
+
+Monitor:
+    'monitor' condition=Expression
+    '>>>'
+        body*=Statement
+    '<<<'
+;
+
+Cycle:
+    'cycle' var=ID 'in' iterable=Expression
+    '>>>'
+        body*=Statement
+    '<<<'
+;
+
+Diagnose:
+    'diagnose' condition=Expression
+    '>>>'
+        body*=Statement
+    '<<<'
+    (otherwise=Otherwise)?
+;
+
+Otherwise:
+    'otherwise'
+    '>>>'
+        body*=Statement
+    '<<<'
+;
+
+TryBlock:
+    'code'
+    '>>>'
+        try_body*=Statement
+    '<<<'
+    'respond' err_name=ID
+    '>>>'
+        catch_body*=Statement
+    '<<<'
+;
+
+Record:
+    'record' value=Expression
+;
+
+Discharge:
+    'discharge' (value=Expression)?
+;
+
+// --- expressions ---
+
+Expression:
+    Or
+;
+
+Or:
+    left=And (op='or' right=And)*
+;
+
+And:
+    left=Not (op='and' right=Not)*
+;
+
+Not:
+    (negated?='not')? expr=Comparison
+;
+
+Comparison:
+    left=Additive (op=CompOp right=Additive)*
+;
+
+CompOp:
+    '==' | '!=' | '<=' | '>=' | '<' | '>'
+;
+
+Additive:
+    left=Multiplicative (op=AddOp right=Multiplicative)*
+;
+
+AddOp:
+    '+' | '-'
+;
+
+Multiplicative:
+    left=Unary (op=MulOp right=Unary)*
+;
+
+MulOp:
+    '*' | '/' | '%'
+;
+
+Unary:
+    (neg?='-')? atom=Atom
+;
+
+Atom:
+    NumberLit | StringLit | BoolLit | ChartLit |
+    PageCall | RangeCall | ParenExpr | VarRef
+;
+
+NumberLit:
+    value=NUMBER
+;
+
+StringLit:
+    value=STRING
+;
+
+BoolLit:
+    value=BOOL
+;
+
+ChartLit:
+    '[' items*=Expression[','] ']'
+;
+
+PageCall:
+    'page' name=ID '(' args*=Expression[','] ')'
+;
+
+RangeCall:
+    'range' '(' args*=Expression[','] ')'
+;
+
+ParenExpr:
+    '(' expr=Expression ')'
+;
+
+VarRef:
+    name=ID
+;
+
+Comment:
+    /\#.*$/
+;

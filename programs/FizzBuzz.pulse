@@ -1,0 +1,12 @@
+cycle i in range(1, 16)
+    diagnose i % 15 == 0 
+        record "FizzBuzz"
+    otherwise   
+        diagnose i % 3 == 0
+            record "Fizz" 
+        otherwise 
+            diagnose i % 5 == 0
+                record "Buzz"
+            otherwise 
+                record i 
+flatline

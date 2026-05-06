@@ -1,0 +1,8 @@
+protocol fact n
+    diagnose n <= 1
+        discharge 1
+    discharge n * page fact(n - 1)
+
+admit result vital = page fact(5)
+record result
+flatline
