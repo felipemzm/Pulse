@@ -1,0 +1,30 @@
+protocol escalate score level
+    diagnose score < 5
+        discharge level
+    discharge page escalate(score / 2, level + 1)
+
+admit heart_rates chart = [70, 95, 110, 72, 140, 70, 85]
+admit threshold vital = 10
+
+cycle hr in heart_rates
+    record "---"
+    record hr
+
+    code
+        admit deviation vital = hr - 70
+        diagnose deviation < 0
+            update deviation = 0 - deviation
+
+        admit score vital = 100 / deviation
+
+        diagnose score >= threshold
+            admit level vital = page escalate(score, 0)
+            record "CRITICAL"
+            record level
+        otherwise
+            record "stable"
+
+    respond err
+        record "normal: at baseline"
+
+flatline

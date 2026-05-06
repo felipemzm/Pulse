@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Pulse ♡</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+<header class="hud">
+  <div class="hud-left">
+    <span class="brand">PULSE♡</span>
+  </div>
+  <div class="hud-right">
+    <div class="vitals">
+      <div class="vital hr-control" title=" setspeed (40–220 bpm)">
+        <span class="vital-label">HR</span>
+        <input type="number" id="vital-hr" class="vital-value vital-input" min="40" max="220" step="5" value="80" />
+        <span class="vital-unit">bpm</span>
+      </div>
+      <div class="vital">
+        <span class="vital-label">EVT</span>
+        <span class="vital-value" id="vital-events">000</span>
+      </div>
+      <div class="vital status-vital" id="vital-status">
+        <span class="vital-label">STATUS</span>
+        <span class="vital-value">IDLE</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="editor-pane">
+    <div class="pane-head">
+      <span class="pane-title">Editor</span>
+      <div class="pane-controls">
+        <select id="sample-select" class="ctrl">
+          <option value="">— samples —</option>
+          <option value="hello_world">hello_world</option>
+          <option value="factorial">factorial</option>
+          <option value="sum_to_ten">sum_to_ten</option>
+          <option value="fizzbuzz">fizzbuzz</option>
+          <option value="triage">triage</option>
+        </select>
+        <button id="run-btn" class="ctrl ctrl-primary">▶ ADMIT</button>
+        <button id="pause-btn" class="ctrl" disabled>❚❚ FREEZE</button>
+      </div>
+    </div>
+    <textarea id="editor" spellcheck="false" autocomplete="off">admit greeting note = "Hello, world!"
+record greeting
+flatline
+</textarea>
+    <div class="output-pane">
+      <div class="pane-title small">OUTPUT</div>
+      <pre id="output"></pre>
+    </div>
+  </section>
+
+  <section class="monitor-pane">
+    <div class="monitor-frame">
+      <div class="monitor-bezel">
+        <canvas id="ecg" width="1200" height="700"></canvas>
+        <div id="ecg-tooltip" class="ecg-tooltip" hidden></div>
+        <div class="monitor-overlay">
+          <span class="overlay-corner bl" id="overlay-event">awaiting trace</span>
+          <span class="overlay-corner br">PULSE-MON</span>
+        </div>
+      </div>
+    </div>
+    <div class="legend">
+      <span class="legend-item"><span class="dot dot-admit"></span>admit / update</span>
+      <span class="legend-item"><span class="dot dot-record"></span>record</span>
+      <span class="legend-item"><span class="dot dot-page"></span>page / discharge</span>
+      <span class="legend-item"><span class="dot dot-cycle"></span>cycle / monitor</span>
+      <span class="legend-item"><span class="dot dot-diagnose"></span>diagnose</span>
+      <span class="legend-item"><span class="dot dot-respond"></span>respond</span>
+      <span class="legend-item"><span class="dot dot-flat"></span>flatline</span>
+    </div>
+  </section>
+</main>
+
+<script src="/static/ecg.js"></script>
+</body>
+</html>

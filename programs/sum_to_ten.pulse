@@ -1,0 +1,9 @@
+admit total vital = 0
+admit i vital = 1
+
+monitor i <= 10
+    update total = total + i
+    update i = i + 1
+
+record total
+flatline
