@@ -1,0 +1,11 @@
+Pulse, A medical themed programming language that with a live ECG like visual that allows you to see as live programs run. 
+
+Demonstration Vide: https://youtu.be/mBOpDK1j8O0
+
+Run:
+Requires Flask (pip install flask on vscode) 
+cd into server 
+python app.py 
+
+Authors: 
+Felipe Munoz, Fernando Soto
